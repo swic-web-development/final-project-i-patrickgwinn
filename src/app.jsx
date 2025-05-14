@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import Navbar from './components/Navbar.jsx'
 
 export default function App() {
   const [error, setError] = useState(null)
@@ -18,4 +19,18 @@ export default function App() {
         setLoading(false)
       })
   }, [])
+  return (
+    <div>
+      <Navbar />
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error.message}</p>}
+      {!loading && !error && (
+        <ul>
+          {people.map((person) => (
+            <li key={person.name}>{person.name}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
 }
