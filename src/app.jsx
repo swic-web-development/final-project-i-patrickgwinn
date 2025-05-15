@@ -5,36 +5,43 @@ import SearchBar from './components/SearchBar.jsx'
 export default function App() {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [people, setPeople] = useState([])
+  const [pokemon, setPokemon] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
-  const [filteredPeople, setFilteredPeople] = useState([])
+  const [filteredPokemon, setFilteredPokemon] = useState([])
 
   useEffect(() => {
-    async function fetchPeople() {
-      const res = await fetch('https://swapi.tech/api/people/?format=json')
-      const data = await res.json()
-      setPeople(data.results)
+    async function fetchPokemon() {
+      try {
+        // Fetch the first 151 pokemon (original generation)
+        const res = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151')
+        const data = await res.json()
+        // Add the name property to each pokemon object
+        const results = data.results.map((pokemon) => ({
+          ...pokemon,
+          name: pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1),
+        }))
+        setPokemon(results)
+      } catch (error) {
+        setError(error)
+      } finally {
+        setLoading(false)
+      }
     }
 
-    fetchPeople()
-      .then(() => setLoading(false))
-      .catch((error) => {
-        setError(error)
-        setLoading(false)
-      })
+    fetchPokemon()
   }, []) // This effect should only run once on component mount
 
   useEffect(() => {
-    // This effect should run whenever searchTerm or people changes
+    // This effect should run whenever searchTerm or pokemon changes
     if (searchTerm === '') {
-      setFilteredPeople(people)
+      setFilteredPokemon(pokemon)
     } else {
-      const filtered = people.filter((person) =>
-        person.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      const filtered = pokemon.filter((poke) =>
+        poke.name.toLowerCase().includes(searchTerm.toLowerCase()),
       )
-      setFilteredPeople(filtered)
+      setFilteredPokemon(filtered)
     }
-  }, [searchTerm, people])
+  }, [searchTerm, pokemon])
 
   // Handle search input change
   const handleSearchChange = (e) => {
@@ -50,9 +57,9 @@ export default function App() {
         {loading && <p>Loading...</p>}
         {error && <p>Error: {error.message}</p>}
         {!loading && !error && (
-          <ul className="people-list">
-            {filteredPeople.map((person) => (
-              <li key={person.name}>{person.name}</li>
+          <ul className="pokemon-list">
+            {filteredPokemon.map((poke) => (
+              <li key={poke.name}>{poke.name}</li>
             ))}
           </ul>
         )}
