@@ -5,7 +5,7 @@ function SearchBar({ searchTerm, onSearchChange }) {
     <div className="search-container">
       <input
         type="text"
-        placeholder="Search people..."
+        placeholder="Search pokemon..."
         value={searchTerm}
         onChange={onSearchChange}
         className="search-input"

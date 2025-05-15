@@ -5,8 +5,8 @@ export default function Navbar() {
   return (
     <Menu>
       <Container>
-        <Menu.Item name="star wars API" />
-        <Menu.Item name="people" />
+        <Menu.Item name="Pokemon API" />
+        <Menu.Item name="First 151 Pokemon" />
       </Container>
     </Menu>
   )
